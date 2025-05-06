@@ -117,6 +117,8 @@ vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
 vim.keymap.set('n', 'n', 'nzzzv')
 vim.keymap.set('n', 'N', 'Nzzzv')
 
+vim.keymap.set('n', '<leader><leader>', '<C-^>')
+
 vim.api.nvim_set_keymap('n', '<Tab>', ':bnext<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<S-Tab>', ':bprev<CR>', { noremap = true, silent = true })
 
@@ -273,6 +275,8 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+
+  'sindrets/diffview.nvim',
 
   -- Auto close
 
@@ -435,6 +439,19 @@ require('lazy').setup({
     end,
   },
 
+  {
+    -- Disabled by default for better loading speed.
+    -- Enable with `:BlamerShow`
+    'APZelos/blamer.nvim',
+  },
+
+  {
+    'numToStr/Comment.nvim',
+    config = function()
+      require('Comment').setup()
+    end,
+  },
+
   -- NOTE: Plugins can specify dependencies.
   --
   -- The dependencies are proper plugin specifications as well - anything
@@ -513,14 +530,14 @@ require('lazy').setup({
       local builtin = require 'telescope.builtin'
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>sf', builtin.git_files, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader>sb', builtin.buffers, { desc = '[S]earch existing [B]uffers' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
@@ -771,7 +788,7 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -878,6 +895,8 @@ require('lazy').setup({
         javascriptreact = { 'prettierd' },
         typescript = { 'prettierd' },
         typescriptreact = { 'prettierd' },
+        yaml = { 'prettierd' },
+        python = { 'ruff_format' },
       },
     },
   },
@@ -1054,6 +1073,8 @@ require('lazy').setup({
       statusline.section_location = function()
         return '%2l:%-2v'
       end
+
+      statusline.section_filename { trunc_width = 300 }
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
