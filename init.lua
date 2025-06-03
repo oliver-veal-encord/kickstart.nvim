@@ -445,12 +445,12 @@ require('lazy').setup({
     'APZelos/blamer.nvim',
   },
 
-  {
-    'numToStr/Comment.nvim',
-    config = function()
-      require('Comment').setup()
-    end,
-  },
+  -- {
+  --   'numToStr/Comment.nvim',
+  --   config = function()
+  --     require('Comment').setup()
+  --   end,
+  -- },
 
   -- NOTE: Plugins can specify dependencies.
   --
@@ -562,6 +562,13 @@ require('lazy').setup({
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
     end,
+  },
+
+  {
+    'folke/ts-comments.nvim',
+    opts = {},
+    event = 'VeryLazy',
+    enabled = vim.fn.has 'nvim-0.10.0' == 1,
   },
 
   -- LSP Plugins
