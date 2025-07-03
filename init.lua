@@ -122,10 +122,42 @@ vim.keymap.set('n', '<leader><leader>', '<C-^>')
 vim.api.nvim_set_keymap('n', '<Tab>', ':bnext<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<S-Tab>', ':bprev<CR>', { noremap = true, silent = true })
 
+vim.keymap.set('n', '<leader>ct', vim.cmd.checktime, { desc = '[C]hecktime' })
+
 vim.opt.virtualedit = 'onemore'
 -- Doesn't seem to work without `:checktime`
 vim.opt.autoread = true
 -- End basic remaps
+
+local augroup = vim.api.nvim_create_augroup('AutoReload', { clear = true })
+
+-- Automatically reload files when they change on disk
+vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'CursorHold', 'CursorHoldI' }, {
+  group = augroup,
+  pattern = '*',
+  callback = function()
+    if vim.fn.mode() ~= 'c' then
+      vim.cmd 'checktime'
+    end
+  end,
+})
+
+-- Notify when file is auto-reloaded
+vim.api.nvim_create_autocmd('FileChangedShellPost', {
+  group = augroup,
+  pattern = '*',
+  callback = function()
+    vim.notify('File reloaded: ' .. vim.fn.expand '%:t', vim.log.levels.INFO)
+  end,
+})
+
+-- vim.api.nvim_create_autocmd('FocusGained', {
+--   group = vim.api.nvim_create_augroup('kickstart-focus-gained', { clear = true }),
+--   callback = function()
+--     vim.cmd.checktime()
+--     vim.cmd.echo 'File changed on disk. Buffer reloaded.'
+--   end,
+-- })
 
 vim.opt.tabstop = 2
 
@@ -795,7 +827,8 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        pyright = {},
+        -- pyright = {},
+        basedpyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -1126,7 +1159,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
