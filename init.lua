@@ -119,6 +119,8 @@ vim.keymap.set('n', 'N', 'Nzzzv')
 
 vim.keymap.set('n', '<leader><leader>', '<C-^>')
 
+vim.keymap.set('n', '<leader>n', ':cnext<CR>')
+
 vim.api.nvim_set_keymap('n', '<Tab>', ':bnext<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<S-Tab>', ':bprev<CR>', { noremap = true, silent = true })
 
@@ -340,6 +342,9 @@ require('lazy').setup({
             max_tokens = 20480,
           },
         },
+        morph = {
+          model = 'morph-v3-large',
+        },
       },
     },
     dependencies = {
@@ -504,7 +509,7 @@ require('lazy').setup({
       local harpoon = require 'harpoon'
       harpoon.setup {}
 
-      vim.keymap.set('n', '<leader>a', function()
+      vim.keymap.set('n', '<leader>h', function()
         harpoon:list():add()
         print 'Added current buffer to harpoon'
       end)
@@ -914,6 +919,8 @@ require('lazy').setup({
         svelte = {},
         zls = {},
 
+        oxlint = {},
+
         lua_ls = {
           -- cmd = { ... },
           -- filetypes = { ... },
@@ -1234,6 +1241,20 @@ require('lazy').setup({
   -- require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+
+  {
+    'antosha417/nvim-lsp-file-operations',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      -- Uncomment whichever supported plugin(s) you use
+      -- "nvim-tree/nvim-tree.lua",
+      'nvim-neo-tree/neo-tree.nvim',
+      -- "simonmclean/triptych.nvim"
+    },
+    config = function()
+      require('lsp-file-operations').setup()
+    end,
+  },
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
