@@ -705,6 +705,21 @@ require('lazy').setup({
     enabled = vim.fn.has 'nvim-0.10.0' == 1,
   },
 
+  {
+    'shimman-dev/laundry.nvim',
+    priority = 1000,
+    requires = { 'nvim-treesitter/nvim-treesitter' },
+    event = { 'BufReadPost', 'BufNewFile' },
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter',
+    },
+    ---@module 'laundry'
+    ---@type LaundryConfig
+    opts = {
+      auto_fold = true, -- default value is false, need to opt-in for plugin
+    },
+  },
+
   -- LSP Plugins
   {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
