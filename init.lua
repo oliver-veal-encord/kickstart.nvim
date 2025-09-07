@@ -126,6 +126,8 @@ vim.api.nvim_set_keymap('n', '<S-Tab>', ':bprev<CR>', { noremap = true, silent =
 
 vim.keymap.set('n', '<leader>ct', vim.cmd.checktime, { desc = '[C]hecktime' })
 
+vim.keymap.set('n', '<leader>tb', vim.cmd.BlamerToggle, { desc = '[T]oggle Blamer' })
+
 vim.opt.virtualedit = 'onemore'
 -- Doesn't seem to work without `:checktime`
 vim.opt.autoread = true
