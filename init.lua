@@ -121,9 +121,6 @@ vim.keymap.set('n', '<leader><leader>', '<C-^>')
 
 vim.keymap.set('n', '<leader>n', ':cnext<CR>')
 
-vim.api.nvim_set_keymap('n', '<Tab>', ':bnext<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<S-Tab>', ':bprev<CR>', { noremap = true, silent = true })
-
 vim.keymap.set('n', '<leader>ct', vim.cmd.checktime, { desc = '[C]hecktime' })
 
 vim.keymap.set('n', '<leader>tb', vim.cmd.BlamerToggle, { desc = '[T]oggle Blamer' })
@@ -719,6 +716,7 @@ require('lazy').setup({
     ---@type LaundryConfig
     opts = {
       auto_fold = true, -- default value is false, need to opt-in for plugin
+      min_fold_lines = 1,
     },
   },
 
