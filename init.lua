@@ -659,15 +659,58 @@ require('lazy').setup({
       pcall(require('telescope').load_extension, 'fzf')
       pcall(require('telescope').load_extension, 'ui-select')
 
+      local pickers = require 'telescope.pickers'
+      local finders = require 'telescope.finders'
+      local actions = require 'telescope.actions'
+      local action_state = require 'telescope.actions.state'
+      local conf = require('telescope.config').values
+
+      _G.telescope_cwd = nil
+
+      -- Wrapper function that uses the custom cwd
+      local function telescope_with_cwd(picker, opts)
+        opts = opts or {}
+        if _G.telescope_cwd then
+          opts.cwd = _G.telescope_cwd
+        end
+        picker(opts)
+      end
+
+      -- Custom directory picker with fd
+      vim.keymap.set('n', '<leader>sd', function()
+        pickers
+          .new({}, {
+            prompt_title = 'Set Telescope CWD',
+            finder = finders.new_oneshot_job({ 'fd', '--type', 'd', '--hidden', '--follow' }, {}),
+            sorter = conf.generic_sorter {},
+            attach_mappings = function(prompt_bufnr)
+              actions.select_default:replace(function()
+                local selection = action_state.get_selected_entry()
+                actions.close(prompt_bufnr)
+                if selection then
+                  _G.telescope_cwd = selection[1]
+                  print('Telescope CWD set to: ' .. _G.telescope_cwd)
+                end
+              end)
+              return true
+            end,
+          })
+          :find()
+      end, { desc = 'Set Telescope CWD with fzf' })
+
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.git_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>sf', function()
+        telescope_with_cwd(builtin.find_files)
+      end, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
-      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
+      vim.keymap.set('n', '<leader>sg', function()
+        telescope_with_cwd(builtin.live_grep)
+      end, { desc = '[S]earch by [G]rep' })
+      -- vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader>sb', builtin.buffers, { desc = '[S]earch existing [B]uffers' })
@@ -799,7 +842,9 @@ require('lazy').setup({
           map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
 
           -- Find references for the word under your cursor.
-          map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+          map('gr', function()
+            require('telescope.builtin').lsp_references { fname_width = 100 }
+          end, '[G]oto [R]eferences')
 
           -- Jump to the implementation of the word under your cursor.
           --  Useful when your language has ways of declaring types without an actual implementation.
