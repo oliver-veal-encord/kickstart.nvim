@@ -400,14 +400,14 @@ require('lazy').setup({
           },
         },
       },
-      {
-        -- Make sure to set this up properly if you have lazy=true
-        'MeanderingProgrammer/render-markdown.nvim',
-        opts = {
-          file_types = { 'markdown', 'Avante' },
-        },
-        ft = { 'markdown', 'Avante' },
-      },
+      -- {
+      --   -- Make sure to set this up properly if you have lazy=true
+      --   'MeanderingProgrammer/render-markdown.nvim',
+      --   opts = {
+      --     file_types = { 'markdown', 'Avante' },
+      --   },
+      --   ft = { 'markdown', 'Avante' },
+      -- },
     },
   },
 
@@ -988,10 +988,20 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
-        -- gopls = {},
+        gopls = {},
         -- pyright = {},
-        pyright = {},
-        mypy = {},
+        pyrefly = {
+          settings = {
+            python = {
+              analysis = {
+                autoSearchPaths = true,
+                diagnosticMode = 'workspace',
+                useLibraryCodeForTypes = true,
+              },
+            },
+          },
+        },
+        -- mypy = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -1040,6 +1050,24 @@ require('lazy').setup({
         'stylua', -- Used to format Lua code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+
+      vim.lsp.config('pyrefly', {
+        -- example of how to run `uv` installed Pyrefly without adding to your path
+        cmd = { 'uvx', 'pyrefly', 'lsp' },
+      })
+      vim.lsp.enable 'pyrefly'
+
+      require('lspconfig').pyrefly.setup {
+        settings = {
+          python = {
+            analysis = {
+              autoSearchPaths = true,
+              diagnosticMode = 'workspace',
+              useLibraryCodeForTypes = true,
+            },
+          },
+        },
+      }
 
       require('mason-lspconfig').setup {
         ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
