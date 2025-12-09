@@ -987,9 +987,7 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
         gopls = {},
-        -- pyright = {},
         pyrefly = {
           settings = {
             python = {
@@ -1001,8 +999,7 @@ require('lazy').setup({
             },
           },
         },
-        -- mypy = {},
-        -- rust_analyzer = {},
+        rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -1010,7 +1007,7 @@ require('lazy').setup({
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
-        --
+        tsgo = {},
         svelte = {},
         zls = {},
 
@@ -1050,24 +1047,6 @@ require('lazy').setup({
         'stylua', -- Used to format Lua code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
-
-      vim.lsp.config('pyrefly', {
-        -- example of how to run `uv` installed Pyrefly without adding to your path
-        cmd = { 'uvx', 'pyrefly', 'lsp' },
-      })
-      vim.lsp.enable 'pyrefly'
-
-      require('lspconfig').pyrefly.setup {
-        settings = {
-          python = {
-            analysis = {
-              autoSearchPaths = true,
-              diagnosticMode = 'workspace',
-              useLibraryCodeForTypes = true,
-            },
-          },
-        },
-      }
 
       require('mason-lspconfig').setup {
         ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
