@@ -981,12 +981,12 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
+        ts_ls = {},
         tsgo = {},
         svelte = {},
         zls = {},
 
-        oxlint = {},
+        -- oxlint = {},
 
         lua_ls = {
           -- cmd = { ... },
@@ -1196,7 +1196,7 @@ require('lazy').setup({
             -- set group index to 0 to skip loading LuaLS completions as lazydev recommends it
             group_index = 0,
           },
-          { name = 'nvim_lsp' },
+          { name = 'nvim_lsp', max_item_count = 20 },
           { name = 'luasnip' },
           { name = 'path' },
           { name = 'nvim_lsp_signature_help' },
