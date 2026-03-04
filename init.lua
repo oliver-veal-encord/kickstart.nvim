@@ -152,6 +152,13 @@ vim.api.nvim_create_autocmd('FileChangedShellPost', {
   end,
 })
 
+-- vim.keymap.set(
+--   'n',
+--   '<leader>rs',
+--   ':!rsync -avz -e ssh --exclude="/.git" --filter="dir-merge,- .gitignore" . ml-server:/home/oli/DetZero<CR>',
+--   { desc = 'Rsync to ml-server' }
+-- )
+
 -- vim.api.nvim_create_autocmd('FocusGained', {
 --   group = vim.api.nvim_create_augroup('kickstart-focus-gained', { clear = true }),
 --   callback = function()
@@ -722,21 +729,21 @@ require('lazy').setup({
     enabled = vim.fn.has 'nvim-0.10.0' == 1,
   },
 
-  {
-    'shimman-dev/laundry.nvim',
-    priority = 1000,
-    requires = { 'nvim-treesitter/nvim-treesitter' },
-    event = { 'BufReadPost', 'BufNewFile' },
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter',
-    },
-    ---@module 'laundry'
-    ---@type LaundryConfig
-    opts = {
-      auto_fold = true, -- default value is false, need to opt-in for plugin
-      min_fold_lines = 1,
-    },
-  },
+  -- {
+  --   'shimman-dev/laundry.nvim',
+  --   priority = 1000,
+  --   requires = { 'nvim-treesitter/nvim-treesitter' },
+  --   event = { 'BufReadPost', 'BufNewFile' },
+  --   dependencies = {
+  --     'nvim-treesitter/nvim-treesitter',
+  --   },
+  --   ---@module 'laundry'
+  --   ---@type LaundryConfig
+  --   opts = {
+  --     auto_fold = true, -- default value is false, need to opt-in for plugin
+  --     min_fold_lines = 1,
+  --   },
+  -- },
 
   -- LSP Plugins
   {
@@ -968,7 +975,7 @@ require('lazy').setup({
             python = {
               analysis = {
                 autoSearchPaths = true,
-                diagnosticMode = 'workspace',
+                diagnosticMode = 'openFilesOnly',
                 useLibraryCodeForTypes = true,
               },
             },
@@ -1078,11 +1085,11 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        javascript = { 'prettierd' },
-        javascriptreact = { 'prettierd' },
-        typescript = { 'prettierd' },
-        typescriptreact = { 'prettierd' },
-        yaml = { 'prettierd' },
+        javascript = { 'oxfmt' },
+        javascriptreact = { 'oxfmt' },
+        typescript = { 'oxfmt' },
+        typescriptreact = { 'oxfmt' },
+        yaml = { 'oxfmt' },
         python = { 'ruff_format' },
       },
     },
